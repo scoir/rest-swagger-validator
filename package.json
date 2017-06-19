@@ -1,0 +1,22 @@
+{
+    "name": "swagga",
+    "version": "1.0.0",
+    "description": "",
+    "main": "lib/index.js",
+    "scripts": {
+        "test": "node node_modules/.bin/jasmine"
+    },
+    "author": "Dayne M Kilheffer",
+    "contributors": [
+        "Steven Palumbo"
+    ],
+    "license": "ISC",
+    "dependencies": {
+        "jsonschema": "1.1.1",
+        "swagger-parser": "3.4.1"
+    },
+    "devDependencies": {
+        "jasmine": "2.6.0",
+        "jasmine-co": "1.2.2"
+    }
+}

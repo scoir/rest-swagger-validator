@@ -1,0 +1,22 @@
+swagger: '2.0'
+info:
+    title: 'Basic Swagger YAML Definition'
+paths:
+    '/pets/{id}':
+        post:
+            description: Returns pets based on ID
+            summary: Find pets by ID
+            operationId: getPetsById
+            produces:
+                - application/json
+            parameters:
+                - name: body
+                  in: body
+                  required: true
+                  schema:
+                      type: array
+            responses:
+                '200':
+                    description: pet response
+                    schema:
+                        type: object
