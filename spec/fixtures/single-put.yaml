@@ -3,7 +3,7 @@ info:
     title: Swagger Petstore
 paths:
     '/pets/{id}':
-        post:
+        put:
             description: Returns pets based on ID
             summary: Find pets by ID
             operationId: getPetsById

@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-    title: 'Basic Swagger YAML Definition'
+    title: Swagger Petstore
 paths:
     '/pets/{id}':
         get:
