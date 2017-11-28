@@ -1,7 +1,7 @@
 {
   "name": "rest-swagger-validator",
   "version": "1.0.0",
-  "description": "",
+  "description": "validate request/response json against swagger definitions",
   "main": "lib/index.js",
   "scripts": {
     "test": "node node_modules/.bin/jasmine"
