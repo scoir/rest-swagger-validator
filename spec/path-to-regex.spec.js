@@ -9,6 +9,14 @@ describe('swagger-path-to-regex', function () {
             params: ['with', 'params']
         })
     })
+    it('should convert a path without a regex', () => {
+        const path = '/some-url/without/params'
+        expect(pathToRegex.convertToRegexer(path)).toEqual({
+            path,
+            regex: /^\/some-url\/without\/params$/,
+            params: []
+        })
+    })
     it('should match a path to a regex matcher', () => {
         const path = '/some-url/{with}/{params}'
         const regexer = pathToRegex.convertToRegexer(path)
@@ -20,4 +28,4 @@ describe('swagger-path-to-regex', function () {
             }
         })
     })
-});
+})
