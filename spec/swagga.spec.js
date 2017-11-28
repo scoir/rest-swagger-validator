@@ -14,27 +14,75 @@ describe('swagga', function () {
                 validator.validateRequest('/pets/123', 'PUT')
             }).toThrowError('Unable to find \'put\' on \'/pets/123\' in schema')
         })
-        it('should fail if the body does not the match the schema definition', async () => {
-            const spy = jasmine.createSpy('exception');
-            const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
-            try {
-                validator.validateRequest('/pets/123', 'POST', {
-                    body: {}
+        describe('#body validation', () => {
+            it('should fail if the body does not the match the schema definition', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
+                try {
+                    validator.validateRequest('/pets/123', 'POST', {
+                        body: {}
+                    })
+                } catch (e) {
+                    spy(e);
+                }
+                expect(spy).toHaveBeenCalledWith([jasmine.objectContaining({
+                    keyword: 'type',
+                    message: 'should be array',
+                })]);
+            })
+            it('should fail if the body does not exist, but the schema requires one', async () => {
+                const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
+                expect(() => {
+                    validator.validateRequest('/pets/123', 'POST', {})
+                }).toThrowError('Body parameter is required for \'post\' on \'/pets/123\'')
+            })
+        })
+        describe('#query parameter validation', () => {
+            it('should fail if a query parameter does not match the corresponding schema', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-get-with-boolean-parameter.yaml')
+                expect(() => {
+                    validator.validateRequest('/pets/123', 'GET', {
+                        query: {
+                            needsMe: '123',
+                        }
+                    })
+                }).toThrow(jasmine.arrayContaining([
+                    jasmine.objectContaining({
+                        keyword: 'type',
+                        dataPath: '.needsMe',
+                        message: 'should be boolean',
+                    })
+                ]))
+            })
+            it('should attempt to coerce the query paremeters into the corresponding type', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-get-with-boolean-parameter.yaml')
+                const result = validator.validateRequest('/pets/123', 'GET', {
+                    query: {
+                        needsMe: 'true',
+                    }
                 })
-            } catch (e) {
-                spy(e);
-            }
-            expect(spy).toHaveBeenCalledWith([jasmine.objectContaining({
-                keyword: 'type',
-                message: 'should be array',
-            })]);
-        })
-        it('should fail if the body does not exist, but the schema requires one', async () => {
-            const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
-            expect(() => {
-                validator.validateRequest('/pets/123', 'POST', {})
-            }).toThrowError('Body parameter is required for \'post\' on \'/pets/123\'')
-        })
+                
+                expect(result).toBeUndefined()
+            })
+            it('should ensure that required parameters are required', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-get-with-boolean-parameter.yaml')
+                expect(() => {
+                    validator.validateRequest('/pets/123', 'GET', {
+                        query: {
+                            somethingElse: '123',
+                        }
+                    })
+                }).toThrow(jasmine.arrayContaining([
+                    jasmine.objectContaining({
+                        keyword: 'required',
+                        message: 'should have required property \'needsMe\'',
+                    })
+                ]))
+            })
+        });
     })
     
     describe('validateResponse()', function () {
