@@ -22,9 +22,12 @@ describe('swagga', function () {
                     body: {}
                 })
             } catch (e) {
-                spy(e.property, e.message);
+                spy(e);
             }
-            expect(spy).toHaveBeenCalledWith('instance', 'is not of a type(s) array');
+            expect(spy).toHaveBeenCalledWith([jasmine.objectContaining({
+                keyword: 'type',
+                message: 'should be array',
+            })]);
         })
         it('should fail if the body does not exist, but the schema requires one', async () => {
             const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
@@ -60,9 +63,14 @@ describe('swagga', function () {
             try {
                 validator.validateResponse('/pets/123', 'POST', 200, [])
             } catch (e) {
-                spy(e.property, e.message);
+                spy(e);
             }
-            expect(spy).toHaveBeenCalledWith('instance', 'is not of a type(s) object');
+            expect(spy).toHaveBeenCalledWith([
+                jasmine.objectContaining({
+                    keyword: 'type',
+                    message: 'should be object',
+                })
+            ]);
         })
     })
 })
