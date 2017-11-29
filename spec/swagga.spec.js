@@ -36,6 +36,28 @@ describe('swagga', function () {
                     validator.validateRequest('/pets/123', 'POST', {})
                 }).toThrowError('Body parameter is required for \'post\' on \'/pets/123\'')
             })
+            it('should not fail if the body does not exist, but the schema provides an optional one', async () => {
+                const validator = await swagga.createFor('./spec/fixtures/single-post-no-required-body.yaml')
+                const result = validator.validateRequest('/pets/123', 'POST', {})
+                expect(result).toBeUndefined()
+            })
+            it('should fail if the body exists, but the schema does not define one', async () => {
+                const validator = await swagga.createFor('./spec/fixtures/single-get.yaml')
+                expect(() => {
+                    validator.validateRequest('/pets/123', 'GET', {
+                        body: {
+                            some: 'field',
+                        }
+                    })
+                }).toThrowError('Unable to find schema definition for request body of \'get\' on \'/pets/123\' in schema')
+            })
+            it('should return nothing if the request is valid', async () => {
+                const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
+                const result = validator.validateRequest('/pets/123', 'POST', {
+                    body: []
+                })
+                expect(result).toBeUndefined()
+            })
         })
         describe('#query parameter validation', () => {
             it('should fail if a query parameter does not match the corresponding schema', async () => {
@@ -82,7 +104,7 @@ describe('swagga', function () {
                     })
                 ]))
             })
-        });
+        })
     })
     
     describe('validateResponse()', function () {
