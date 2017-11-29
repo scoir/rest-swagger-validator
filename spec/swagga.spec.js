@@ -12,7 +12,7 @@ describe('swagga', function () {
             const validator = await swagga.createFor('./spec/fixtures/single-get.yaml')
             expect(() => {
                 validator.validateRequest('/pets/123', 'PUT')
-            }).toThrowError('Unable to find \'put\' on \'/pets/123\' in schema')
+            }).toThrowError('Unable to find \'put\' on \'/pets/{id}\' in schema')
         })
         describe('#body validation', () => {
             it('should fail if the body does not the match the schema definition', async () => {
@@ -160,13 +160,13 @@ describe('swagga', function () {
             const validator = await swagga.createFor('./spec/fixtures/single-get.yaml')
             expect(() => {
                 validator.validateResponse('/pets/123', 'PUT')
-            }).toThrowError('Unable to find \'put\' on \'/pets/123\' in schema')
+            }).toThrowError('Unable to find \'put\' on \'/pets/{id}\' in schema')
         })
         it('should fail if the path and method can not return the specified status', async () => {
             const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
             expect(() => {
                 validator.validateResponse('/pets/123', 'POST', 450)
-            }).toThrowError('Unable to find response code 450 for \'post\' on \'/pets/123\' in schema')
+            }).toThrowError('Unable to find response code 450 for \'post\' on \'/pets/{id}\' in schema')
         })
         it('should fail if the body does not match the schema definition', async () => {
             const spy = jasmine.createSpy('exception');
