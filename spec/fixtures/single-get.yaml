@@ -9,6 +9,11 @@ paths:
             operationId: getPetsById
             produces:
                 - application/json
+            parameters:
+                - name: id
+                  in: path
+                  type: integer
+                  required: true
             responses:
                 '200':
                     description: pet response

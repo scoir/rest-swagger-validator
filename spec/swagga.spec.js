@@ -105,6 +105,48 @@ describe('swagga', function () {
                 ]))
             })
         })
+        describe('#path parameter validation', () => {
+            it('should fail if a path parameter does not match the corresponding schema', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-get.yaml')
+                expect(() => {
+                    validator.validateRequest('/pets/abc', 'GET', {})
+                }).toThrow(jasmine.arrayContaining([
+                    jasmine.objectContaining({
+                        keyword: 'type',
+                        dataPath: '.id',
+                        message: 'should be integer',
+                    })
+                ]))
+            })
+            it('should attempt to coerce the query paremeters into the corresponding type', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-get-with-boolean-parameter.yaml')
+                const result = validator.validateRequest('/pets/123', 'GET', {
+                    query: {
+                        needsMe: 'true',
+                    }
+                })
+                
+                expect(result).toBeUndefined()
+            })
+            it('should ensure that required parameters are required', async () => {
+                const spy = jasmine.createSpy('exception');
+                const validator = await swagga.createFor('./spec/fixtures/single-get-with-boolean-parameter.yaml')
+                expect(() => {
+                    validator.validateRequest('/pets/123', 'GET', {
+                        query: {
+                            somethingElse: '123',
+                        }
+                    })
+                }).toThrow(jasmine.arrayContaining([
+                    jasmine.objectContaining({
+                        keyword: 'required',
+                        message: 'should have required property \'needsMe\'',
+                    })
+                ]))
+            })
+        })
     })
     
     describe('validateResponse()', function () {
