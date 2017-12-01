@@ -18,17 +18,24 @@ var swag;
 
 // validate that a response is valid before recording so that we do not test against a state that should never occur based on the api specification
 const recordGet = (url, responseStatus, responseBody) => {
-    swag.validateResponse(url, 'GET', responseStatus, responseBody);
+    const validationResult = swag.validateResponse(url, 'GET', responseStatus, responseBody);
+    
+    // a more thorough expectation should be used
+    expect(validationResult).toBeUndefined();
+    
     // record an expected GET request
 }
 
 // validate that any calls made from the browser pass the schema laid out in the swagger api spec
 const validateGet = (url) => {
     const lastGetCall = myCallHistory.getLastGetCall(url);
-    swag.validateRequest(url, 'GET', {
+    const validationResult = swag.validateRequest(url, 'GET', {
         query: lastGetCall.queryParameters,
         body: lastGetCall.body,
     });
+    
+    // a more thorough expectation should be used
+    expect(validationResult).toBeUndefined();
 }
 
 // before we start testing, create a swagger validator instance for a specific swagger file
