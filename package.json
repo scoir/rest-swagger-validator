@@ -1,5 +1,5 @@
 {
-  "name": "rest-swagger-validator",
+  "name": "@scoir/rest-swagger-validator",
   "version": "1.0.0",
   "description": "validate request/response json against swagger definitions",
   "main": "lib/index.js",
