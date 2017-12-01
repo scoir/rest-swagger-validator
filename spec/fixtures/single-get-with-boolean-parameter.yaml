@@ -10,9 +10,9 @@ paths:
             produces:
                 - application/json
             parameters:
-                - name: id
-                  in: path
-                  type: integer
+                - name: needsMe
+                  in: query
+                  type: boolean
                   required: true
             responses:
                 '200':
