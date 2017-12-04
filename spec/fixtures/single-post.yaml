@@ -20,3 +20,5 @@ paths:
                     description: pet response
                     schema:
                         type: object
+                '304':
+                    description: unusable

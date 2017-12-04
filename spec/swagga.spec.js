@@ -175,6 +175,15 @@ describe('swagga', function () {
                 }
             ])
         })
+        it('should fail if the path and method does not have a specified schema response', async () => {
+            const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
+            expect(validator.validateResponse('/pets/123', 'POST', 304, [])).toEqual([
+                {
+                    type: 'missing',
+                    message: 'schema for 304 response code',
+                }
+            ])
+        })
         it('should fail if the body does not match the schema definition', async () => {
             const validator = await swagga.createFor('./spec/fixtures/single-post.yaml')
             const result = validator.validateResponse('/pets/123', 'POST', 200, [])
